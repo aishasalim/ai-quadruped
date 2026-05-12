@@ -36,51 +36,6 @@ The robot is designed in phases:
 
 ---
 
-## 🧠 System Architecture
-
-```
-┌─────────────────────────────────────────────┐
-│              ESP32-S3 (Main Brain)           │
-│                                             │
-│  ┌──────────┐  ┌──────────┐  ┌───────────┐ │
-│  │  Audio   │  │  Display │  │  Wi-Fi    │ │
-│  │  Input   │  │  (TFT)   │  │  (API)    │ │
-│  │ (INMP441)│  │  Face UI │  │  Backend  │ │
-│  └──────────┘  └──────────┘  └───────────┘ │
-│                                             │
-│  ┌──────────┐  ┌──────────┐  ┌───────────┐ │
-│  │  Audio   │  │  Servo   │  │  Camera   │ │
-│  │  Output  │  │  Control │  │ (ESP32-S3 │ │
-│  │(MAX98357)│  │  (later) │  │   CAM)    │ │
-│  └──────────┘  └──────────┘  └───────────┘ │
-└─────────────────────────────────────────────┘
-```
-
-### Communication Flow
-
-```
-[Button / Wake Word]
-        │
-        ▼
-[Microphone Input (INMP441)]
-        │
-        ▼
-[ESP32-S3: Audio Capture + Wi-Fi Send]
-        │
-        ▼
-[Backend: STT → LLM → TTS]
-        │
-        ▼
-[ESP32-S3: Command Router + State Machine]
-        │
-     ┌──┴──┐
-     ▼     ▼
-[Face]  [Servo / Action]
-[TFT]   [Speaker Output]
-```
-
----
-
 ## 🔧 Hardware
 
 ### Current Hardware
@@ -128,41 +83,6 @@ The robot is designed in phases:
 
 ---
 
-## 🗂️ Repository Structure
-
-```
-aria-robot/
-├── firmware/
-│   ├── main/
-│   │   ├── main.cpp
-│   │   ├── state_machine.cpp
-│   │   ├── audio_input.cpp
-│   │   ├── audio_output.cpp
-│   │   ├── face_display.cpp
-│   │   ├── wifi_client.cpp
-│   │   └── servo_control.cpp
-│   ├── include/
-│   └── CMakeLists.txt
-├── hardware/
-│   ├── wiring_diagrams/
-│   ├── bom.md
-│   └── schematics/
-├── dashboard/
-│   └── (future web app)
-├── docs/
-│   ├── architecture.md
-│   ├── state_machine.md
-│   ├── wiring_guide.md
-│   ├── roadmap.md
-│   └── build_log.md
-├── assets/
-│   ├── face_sprites/
-│   └── demo_videos/
-└── README.md
-```
-
----
-
 ## 🤖 Robot States
 
 | State       | Face              | LED          | Behavior                           |
@@ -198,51 +118,6 @@ aria-robot/
 
 ---
 
-## 📅 Build Roadmap
-
-### Phase 1 — Brain MVP (Weeks 1–5)
-
-- [x] Repo setup and architecture planning
-- [ ] TFT display wiring and face rendering
-- [ ] State machine implementation
-- [ ] Audio output (MAX98357 + speaker)
-- [ ] Push-to-talk microphone input
-- [ ] Wi-Fi connected AI response loop
-
-### Phase 2 — Personality + Motion (Weeks 6–9)
-
-- [ ] Emotion state engine
-- [ ] Local command router
-- [ ] First servo integration (head pan/tilt)
-- [ ] Speech-motion sync
-- [ ] Wake word / name activation
-
-### Phase 3 — Cardboard Body Prototype (Weeks 10–12)
-
-- [ ] Mechanical layout and dimension planning
-- [ ] Cardboard chassis build
-- [ ] 8-servo quadruped integration
-- [ ] Basic gait: stand, sit, shuffle, waggle
-- [ ] Power supply planning
-
-### Phase 4 — 3D Printed Body (Future)
-
-- [ ] Redesign frame for 3D printing
-- [ ] Clean wire routing
-- [ ] Improved head/face mounting
-- [ ] Weight/balance optimization
-
-### Phase 5 — Dashboard App (Future)
-
-- [ ] Web-based control dashboard
-- [ ] Servo calibration interface
-- [ ] Behavior/personality configuration
-- [ ] OTA updates
-- [ ] Camera feed viewer
-- [ ] Command log
-
----
-
 ## 📐 Mechanical Specs (Target)
 
 | Parameter | Target Value                   |
@@ -254,17 +129,6 @@ aria-robot/
 | Head      | Display face + optional camera |
 | Weight    | As light as possible           |
 | Power     | LiPo battery (portable)        |
-
----
-
-## 🐛 Build Log
-
-### Week 1
-
-- [ ] Setup complete
-- [ ] Architecture diagram drafted
-
-> See full build log in [`docs/build_log.md`](docs/build_log.md)
 
 ---
 
@@ -280,44 +144,6 @@ aria-robot/
 | Memory / personalization     | Low      |
 | Autonomous wandering         | Low      |
 | Multi-step scripted routines | Low      |
-
----
-
-## 📸 Demo
-
-> Demo videos and photos will be added as the project progresses.
-
----
-
-## 🛠️ Setup
-
-### Prerequisites
-
-- ESP-IDF or Arduino framework for ESP32
-- Python 3.x (for tooling scripts)
-- Wi-Fi network
-- Backend API credentials (STT / LLM / TTS)
-
-### Flash Firmware
-
-```bash
-# Clone the repo
-git clone https://github.com/aishasalim/aria-robot.git
-cd aria-robot/firmware
-
-# Build and flash (ESP-IDF)
-idf.py build
-idf.py -p /dev/ttyUSB0 flash monitor
-```
-
-### Configure Wi-Fi and API
-
-```cpp
-// firmware/include/config.h
-#define WIFI_SSID     "your-network"
-#define WIFI_PASSWORD "your-password"
-#define API_ENDPOINT  "your-backend-url"
-```
 
 ---
 
