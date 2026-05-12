@@ -1,224 +1,328 @@
-# Robo-Friend: ESP32 Voice-Interactive Quadruped Brain
+# 🤖 AI powered Quadruped
 
-A small, expressive embedded robot platform built around an **ESP32-S3**, designed as a lightweight **voice-interactive robo-friend**. The project combines **audio input/output**, **face animation**, **Wi-Fi-connected AI responses**, and **servo-driven motion** as the control stack for a future quadruped robot.
-
-This project starts as a **breadboard-based robot brain** and grows in stages:
-
-1. **Voice + face + AI interaction**
-2. **Head/servo motion**
-3. **Cardboard quadruped prototype**
-4. **3D-printed lightweight body**
-5. **Dashboard app for control, calibration, and behavior management**
+> A small, expressive ESP32-based robo-friend with voice interaction,
+> animated face display, AI-powered responses, and a future
+> quadruped body.
 
 ---
 
-## Project Goals
+## 📖 Project Overview
 
-- Build a compact **robot brain** on breadboard using an **ESP32-S3**
-- Support **button-triggered voice interaction**, then later **wake word / name activation**
-- Create an expressive **animated face UI** on a small TFT screen
-- Integrate **AI-backed conversational responses** over Wi-Fi
-- Add **servo-based gestures** and eventually synchronized body movement
-- Prototype a **small quadruped robo-friend** with a target size of **30–40 cm max**
-- Keep the robot **lightweight, playful, and personality-driven** rather than utility-focused
+AI powered Quadruped is a lightweight, expressive companion robot built around the
+**ESP32-S3** microcontroller. The project combines embedded systems
+engineering, voice interaction, AI-powered command processing, and
+animated display output into a single cohesive platform.
 
----
+The robot is designed in phases:
 
-## Current Vision
+- **Phase 1:** Breadboard brain prototype with voice, face, and AI
+- **Phase 2:** Head servo motion and speech-motion sync
+- **Phase 3:** Cardboard quadruped body prototype
+- **Phase 4:** 3D-printed chassis and polished build
+- **Phase 5:** Dashboard app and advanced features
 
-The robot is intentionally designed as a **fun companion robot**, not a serious industrial platform.
-
-Planned physical form:
-
-- 4 legs
-- 8 servos
-- small head
-- face display
-- compact electronics box (“brains”)
-- expressive voice + movement
-
-The goal is for it to feel like a **robo friend**:
-
-- listens when asked
-- responds with speech
-- shows emotion on its face
-- reacts with head/body gestures
-- can eventually walk, wiggle, greet, and “perform”
+> This project is a personal hardware/embedded systems build.
+> It is not a commercial product.
 
 ---
 
-## Planned Features
+## 🎯 Goals
 
-### Core Interaction
-
-- Push-button speech activation
-- Wake-word / name activation
-- Microphone input
-- Text-to-speech output
-- AI-generated conversational responses
-- Local command handling for safe robot actions
-
-### Expression
-
-- Animated TFT face
-- Emotional states:
-  - idle
-  - listening
-  - thinking
-  - speaking
-  - sleepy
-  - excited
-  - confused
-- Idle animations (blink, look around, etc.)
-
-### Motion
-
-- Head servo gestures
-- Speech-motion synchronization
-- Safe predefined action routines
-- Later: 8-servo quadruped movement
-
-### Intelligence
-
-- Wi-Fi-based AI response pipeline
-- Personality / behavior modes
-- Command-to-action mapping
-- Future camera-based reactions with ESP32-S3 CAM
-
-### Long-Term
-
-- Cardboard quadruped prototype
-- 3D-printed body
-- Dashboard app for:
-  - servo calibration
-  - command control
-  - behavior mode switching
-  - system status
+- Build a small, funny, expressive robot that feels alive
+- Learn embedded systems, firmware, and hardware-software integration
+- Create a modular, extensible embedded AI platform
+- Target size: **30–40 cm max**
+- Target personality: **funny, expressive, a little dramatic**
 
 ---
 
-## Hardware
+## 🧠 System Architecture
 
-### Main Controller
+```
+┌─────────────────────────────────────────────┐
+│              ESP32-S3 (Main Brain)           │
+│                                             │
+│  ┌──────────┐  ┌──────────┐  ┌───────────┐ │
+│  │  Audio   │  │  Display │  │  Wi-Fi    │ │
+│  │  Input   │  │  (TFT)   │  │  (API)    │ │
+│  │ (INMP441)│  │  Face UI │  │  Backend  │ │
+│  └──────────┘  └──────────┘  └───────────┘ │
+│                                             │
+│  ┌──────────┐  ┌──────────┐  ┌───────────┐ │
+│  │  Audio   │  │  Servo   │  │  Camera   │ │
+│  │  Output  │  │  Control │  │ (ESP32-S3 │ │
+│  │(MAX98357)│  │  (later) │  │   CAM)    │ │
+│  └──────────┘  └──────────┘  └───────────┘ │
+└─────────────────────────────────────────────┘
+```
 
-- **ESP32-S3** (primary robot controller)
+### Communication Flow
 
-### Available Components
-
-- Raspberry Pi 4B (optional future support)
-- Freenove ESP32-S3 CAM module
-- Raspberry Pi Pico W
-- Arduino Nano V3.0
-- Arduino UNO R3
-- 1.8" TFT LCD (128x160 SPI)
-- INMP441 I2S microphone modules
-- MAX98357 I2S amplifier breakout boards
-- Rotary encoder
-- 4x4 keypad
-- Potentiometers
-- Tactile switches
-- DIP switches
-- Breadboards, resistors, jumper wires
-
-### Planned Additional Parts
-
-- Servos
-- Servo power distribution hardware
-- Battery / external power supply
-- Mechanical frame materials
-- Cardboard prototype body
-- Later: 3D-printed chassis parts
-
----
-
-## System Architecture
-
-### High-Level Flow
-
-1. User activates robot by **button** (later wake word)
-2. Robot enters **listening** mode
-3. Audio is captured through microphone
-4. ESP32 sends request over **Wi-Fi** to backend / AI service
-5. Response is returned as:
-   - interpreted command and/or
-   - conversational response
-6. Robot:
-   - speaks reply
-   - updates face expression
-   - triggers safe motion routine if needed
-
-### Control Philosophy
-
-AI does **not** directly control raw motor values.
-
-Instead:
-
-- AI / command parser selects **safe predefined actions**
-- embedded controller executes validated routines such as:
-  - `nod`
-  - `look_left`
-  - `look_right`
-  - `greet`
-  - `sleep`
-  - `happy_wiggle`
-
-This keeps behavior safer, more debuggable, and easier to extend.
+```
+[Button / Wake Word]
+        │
+        ▼
+[Microphone Input (INMP441)]
+        │
+        ▼
+[ESP32-S3: Audio Capture + Wi-Fi Send]
+        │
+        ▼
+[Backend: STT → LLM → TTS]
+        │
+        ▼
+[ESP32-S3: Command Router + State Machine]
+        │
+     ┌──┴──┐
+     ▼     ▼
+[Face]  [Servo / Action]
+[TFT]   [Speaker Output]
+```
 
 ---
 
-## Development Roadmap
+## 🔧 Hardware
 
-### Phase 1 — Brain MVP
+### Current Hardware
 
-- ESP32 setup
-- TFT face states
-- push-button activation
-- speaker output
-- microphone input
-- Wi-Fi communication
-- simple AI response loop
+| Component        | Part                     | Purpose                     |
+| ---------------- | ------------------------ | --------------------------- |
+| Main MCU         | ESP32-S3 (Freenove CAM)  | Brain, Wi-Fi, camera        |
+| Secondary MCU    | Raspberry Pi Pico W      | Optional peripheral control |
+| Microcontroller  | Arduino Nano V3.0        | Peripheral testing          |
+| Microphone x2    | INMP441 (I2S)            | Voice input                 |
+| Amplifier x2     | MAX98357 (I2S, 3W)       | Speaker output              |
+| Display          | 1.8" TFT LCD 128x160 SPI | Face/status display         |
+| Rotary Encoder   | EC11 360° with button    | Manual input / menu         |
+| Keypad           | 4x4 matrix               | Debug / command input       |
+| Breadboards      | SYB-170 mini x2          | Prototyping                 |
+| Jumper wires     | 140-piece U-shape        | Connections                 |
+| Resistors        | 300/600 piece 1% 1/4W    | Signal conditioning         |
+| Tactile switches | 100-piece kit            | Input controls              |
 
-### Phase 2 — Personality Layer
+### Planned Hardware (not yet acquired)
 
-- emotional state machine
-- local command routing
-- expressive face behaviors
-- idle animations
-- character/personality tuning
-
-### Phase 3 — Motion Starter
-
-- first servo experiments
-- head pan / tilt
-- gesture routines
-- speech-motion sync
-
-### Phase 4 — Cardboard Quadruped
-
-- lightweight body prototype
-- 8-servo leg system
-- basic movement routines
-- verbal + movement interaction
-
-### Phase 5 — Full Prototype Upgrade
-
-- 3D-printed body
-- cleaner packaging
-- dashboard app
-- camera integration
-- servo calibration tools
+| Component                  | Purpose                         |
+| -------------------------- | ------------------------------- |
+| 8× servo motors            | Leg/head actuation              |
+| Servo driver board         | Multi-servo PWM control         |
+| IMU (MPU6050 or similar)   | Balance and orientation sensing |
+| LiPo battery + BMS         | Portable power                  |
+| Cardboard / acrylic / foam | V1 chassis prototype            |
+| 3D printed parts           | Final chassis (Phase 4)         |
 
 ---
 
-## Repository Structure
+## 💻 Software Stack
 
-```text
-robo-friend/
-├── firmware/            # ESP32 firmware
-├── docs/                # diagrams, notes, roadmap, debugging logs
-├── hardware/            # wiring notes, BOM, pinouts
-├── assets/              # face animations, sounds, icons
-├── dashboard/           # future control/dashboard app
-├── demos/               # videos, screenshots, test captures
+| Layer              | Tech                                 |
+| ------------------ | ------------------------------------ |
+| Firmware           | C/C++ (ESP-IDF / Arduino framework)  |
+| Audio pipeline     | I2S mic → ESP32 → Wi-Fi → backend    |
+| Speech-to-text     | Cloud API (configurable)             |
+| LLM                | API-based (configurable backend)     |
+| Text-to-speech     | Cloud API → audio stream             |
+| Display            | TFT SPI driver, custom face renderer |
+| State machine      | Custom finite state machine          |
+| Dashboard (future) | Web app (TBD)                        |
+
+---
+
+## 🗂️ Repository Structure
+
+```
+aria-robot/
+├── firmware/
+│   ├── main/
+│   │   ├── main.cpp
+│   │   ├── state_machine.cpp
+│   │   ├── audio_input.cpp
+│   │   ├── audio_output.cpp
+│   │   ├── face_display.cpp
+│   │   ├── wifi_client.cpp
+│   │   └── servo_control.cpp
+│   ├── include/
+│   └── CMakeLists.txt
+├── hardware/
+│   ├── wiring_diagrams/
+│   ├── bom.md
+│   └── schematics/
+├── dashboard/
+│   └── (future web app)
+├── docs/
+│   ├── architecture.md
+│   ├── state_machine.md
+│   ├── wiring_guide.md
+│   ├── roadmap.md
+│   └── build_log.md
+├── assets/
+│   ├── face_sprites/
+│   └── demo_videos/
 └── README.md
 ```
+
+---
+
+## 🤖 Robot States
+
+| State       | Face              | LED          | Behavior                           |
+| ----------- | ----------------- | ------------ | ---------------------------------- |
+| `IDLE`      | Blinking eyes     | Soft glow    | Idle animations, occasional wiggle |
+| `LISTENING` | Wide eyes         | Blue pulse   | Recording audio input              |
+| `THINKING`  | Dots / loading    | Yellow pulse | Processing / API call              |
+| `SPEAKING`  | Mouth animate     | White        | Playing TTS audio                  |
+| `SLEEPING`  | Closed eyes       | Off / dim    | Low power, awaiting wake trigger   |
+| `HAPPY`     | Happy face        | Green        | Triggered by command               |
+| `CONFUSED`  | Tilted expression | Orange       | Unknown command                    |
+| `ERROR`     | X eyes            | Red          | System error state                 |
+
+---
+
+## 🎮 Command Map
+
+| Voice Command        | Action                          |
+| -------------------- | ------------------------------- |
+| "What is your name?" | Introduce self                  |
+| "Tell me a joke"     | Random joke from LLM            |
+| "How are you?"       | Random personality response     |
+| "Go to sleep"        | Enter sleep mode                |
+| "Wake up"            | Exit sleep mode                 |
+| "Be happy"           | Switch to happy emotional state |
+| "Be sad"             | Switch to sad emotional state   |
+| "Status report"      | Report system status            |
+| "Look left"          | Head pan servo left             |
+| "Look right"         | Head pan servo right            |
+| "Nod"                | Head tilt nod gesture           |
+| "Dance"              | Perform dance routine           |
+| "Take a picture"     | Capture image from ESP32-CAM    |
+
+---
+
+## 📅 Build Roadmap
+
+### Phase 1 — Brain MVP (Weeks 1–5)
+
+- [x] Repo setup and architecture planning
+- [ ] TFT display wiring and face rendering
+- [ ] State machine implementation
+- [ ] Audio output (MAX98357 + speaker)
+- [ ] Push-to-talk microphone input
+- [ ] Wi-Fi connected AI response loop
+
+### Phase 2 — Personality + Motion (Weeks 6–9)
+
+- [ ] Emotion state engine
+- [ ] Local command router
+- [ ] First servo integration (head pan/tilt)
+- [ ] Speech-motion sync
+- [ ] Wake word / name activation
+
+### Phase 3 — Cardboard Body Prototype (Weeks 10–12)
+
+- [ ] Mechanical layout and dimension planning
+- [ ] Cardboard chassis build
+- [ ] 8-servo quadruped integration
+- [ ] Basic gait: stand, sit, shuffle, waggle
+- [ ] Power supply planning
+
+### Phase 4 — 3D Printed Body (Future)
+
+- [ ] Redesign frame for 3D printing
+- [ ] Clean wire routing
+- [ ] Improved head/face mounting
+- [ ] Weight/balance optimization
+
+### Phase 5 — Dashboard App (Future)
+
+- [ ] Web-based control dashboard
+- [ ] Servo calibration interface
+- [ ] Behavior/personality configuration
+- [ ] OTA updates
+- [ ] Camera feed viewer
+- [ ] Command log
+
+---
+
+## 📐 Mechanical Specs (Target)
+
+| Parameter | Target Value                   |
+| --------- | ------------------------------ |
+| Max size  | 30–40 cm                       |
+| Legs      | 4                              |
+| Servos    | 8 (2 per leg) + optional head  |
+| Body      | Box frame with mounted brain   |
+| Head      | Display face + optional camera |
+| Weight    | As light as possible           |
+| Power     | LiPo battery (portable)        |
+
+---
+
+## 🐛 Build Log
+
+### Week 1
+
+- [ ] Setup complete
+- [ ] Architecture diagram drafted
+
+> See full build log in [`docs/build_log.md`](docs/build_log.md)
+
+---
+
+## 🚀 Stretch Goals
+
+| Feature                      | Priority |
+| ---------------------------- | -------- |
+| Wake word detection          | High     |
+| Idle animations              | High     |
+| ESP32-CAM visual reactions   | Medium   |
+| Remote dashboard control     | Medium   |
+| Touch sensor mood reactions  | Low      |
+| Memory / personalization     | Low      |
+| Autonomous wandering         | Low      |
+| Multi-step scripted routines | Low      |
+
+---
+
+## 📸 Demo
+
+> Demo videos and photos will be added as the project progresses.
+
+---
+
+## 🛠️ Setup
+
+### Prerequisites
+
+- ESP-IDF or Arduino framework for ESP32
+- Python 3.x (for tooling scripts)
+- Wi-Fi network
+- Backend API credentials (STT / LLM / TTS)
+
+### Flash Firmware
+
+```bash
+# Clone the repo
+git clone https://github.com/aishasalim/aria-robot.git
+cd aria-robot/firmware
+
+# Build and flash (ESP-IDF)
+idf.py build
+idf.py -p /dev/ttyUSB0 flash monitor
+```
+
+### Configure Wi-Fi and API
+
+```cpp
+// firmware/include/config.h
+#define WIFI_SSID     "your-network"
+#define WIFI_PASSWORD "your-password"
+#define API_ENDPOINT  "your-backend-url"
+```
+
+---
+
+## 📄 License
+
+MIT License — feel free to fork, modify, and build your own robo-friend.
+
+---
